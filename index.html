@@ -5,130 +5,129 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>FitMirror - 虚拟试穿</title>
 <style>
-/* ============================================ */
 :root {
-  --bg: #f7f6f4;
+  --bg: #f8f7f5;
   --surface: #ffffff;
-  --border: #e5e2dd;
+  --border: #eae6e0;
   --text: #2d2a26;
-  --text2: #8c8780;
-  --accent: #ff6b6b;
+  --text2: #9e9890;
+  --accent: #5b7fff;
   --radius: 14px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 html,body { height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); -webkit-tap-highlight-color:transparent; user-select:none; }
+body { display:flex; flex-direction:column; }
+
 /* 顶栏 */
-.topbar { height:50px; display:flex; align-items:center; gap:8px; padding:0 16px; background:var(--surface); border-bottom:1px solid var(--border); z-index:10; position:relative; }
-.topbar h1 { font-size:17px; font-weight:700; }
-.topbar .sub { font-size:11px; color:var(--text2); }
+.topbar { height:48px; min-height:48px; display:flex; align-items:center; gap:8px; padding:0 20px; background:var(--surface); border-bottom:1px solid var(--border); }
+.topbar h1 { font-size:17px; font-weight:700; letter-spacing:-0.3px; }
+.topbar span { font-size:11px; color:var(--text2); margin-left:2px; }
+.topbar .gh { margin-left:auto; font-size:12px; color:var(--text2); }
+
 /* 主体 */
-.main { display:flex; height:calc(100% - 50px); }
-/* 左侧衣柜 */
-.wardrobe { width:260px; min-width:260px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; transition:transform 0.3s; }
-.wardrobe-head { padding:12px 12px 8px; }
-.cat-tabs { display:flex; gap:4px; flex-wrap:wrap; }
-.cat-tab { flex:1; min-width:50px; padding:9px 4px; border:1px solid var(--border); background:var(--surface); border-radius:20px; font-size:11px; cursor:pointer; transition:all 0.15s; text-align:center; color:var(--text2); }
-.cat-tab.active { background:var(--text); color:#fff; border-color:var(--text); }
-.wardrobe-body { flex:1; overflow-y:auto; padding:0 12px 12px; display:flex; flex-wrap:wrap; gap:8px; align-content:flex-start; }
-.wardrobe-body::-webkit-scrollbar { width:4px; }
-.wardrobe-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
-.cloth-card { width:calc(50% - 4px); aspect-ratio:1; border-radius:10px; border:2px solid transparent; overflow:hidden; cursor:pointer; position:relative; background:#f5f3f0; transition:all 0.15s; }
-.cloth-card:hover { transform:scale(1.03); }
-.cloth-card.sel { border-color:var(--accent); box-shadow:0 0 0 3px rgba(255,107,107,0.2); }
-.cloth-card img { width:100%; height:100%; object-fit:contain; }
-.cloth-card .del { position:absolute; top:4px; right:4px; width:18px; height:18px; border:none; background:rgba(0,0,0,0.45); color:#fff; border-radius:50%; font-size:10px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.15s; }
-.cloth-card:hover .del { opacity:1; }
-.empty-hint { width:100%; padding:20px 8px; text-align:center; color:var(--text2); font-size:12px; border:2px dashed var(--border); border-radius:10px; }
-.add-row { padding:0 12px 12px; display:flex; gap:8px; }
-.add-row select { flex:1; padding:10px 8px; border:1px solid var(--border); border-radius:20px; font-size:13px; background:var(--surface); cursor:pointer; }
-.add-row button { padding:10px 16px; border:none; background:var(--accent); color:#fff; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; }
-.add-row button:hover { opacity:0.9; }
-/* 右侧人物 */
-.viewport { flex:1; position:relative; cursor:grab; background:radial-gradient(ellipse at center,#f0ede8 0%,#e0dcd5 100%); }
-.viewport:active { cursor:grabbing; }
-.viewport canvas { display:block; }
-.hint { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--text2); pointer-events:none; animation:fade 3s forwards; }
-@keyframes fade { 0%,60%{opacity:0.7} 100%{opacity:0} }
+.main { flex:1; display:flex; min-height:0; }
+
+/* 左侧衣柜 25% */
+.wardrobe { width:25%; min-width:280px; max-width:380px; background:var(--surface); border-right:1px solid var(--border); display:flex; flex-direction:column; }
+.w-head { padding:16px 16px 8px; }
+.cats { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+.cat { padding:13px 8px; border:1.5px solid var(--border); background:var(--surface); border-radius:12px; font-size:13px; cursor:pointer; transition:all 0.18s; text-align:center; color:var(--text2); display:flex; align-items:center; justify-content:center; gap:6px; }
+.cat em { font-style:normal; font-size:16px; }
+.cat .txt { font-size:12px; }
+.cat.active { background:#f0f0ff; border-color:var(--accent); color:var(--accent); font-weight:600; }
+.cat:hover:not(.active) { border-color:#d0ccc4; }
+
+.w-body { flex:1; overflow-y:auto; padding:12px 16px; display:grid; grid-template-columns:1fr 1fr; gap:10px; align-content:start; }
+.w-body::-webkit-scrollbar { width:4px; }
+.w-body::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+
+.cloth { aspect-ratio:1; border-radius:10px; border:2px solid transparent; overflow:hidden; cursor:pointer; background:#f3f1ed; transition:all 0.15s; position:relative; }
+.cloth:hover { transform:scale(1.04); }
+.cloth.on { border-color:var(--accent); box-shadow:0 0 0 3px rgba(91,127,255,0.18); }
+.cloth img { width:100%; height:100%; object-fit:cover; }
+.cloth .x { position:absolute; top:5px; right:5px; width:20px; height:20px; border:none; background:rgba(0,0,0,0.4); color:#fff; border-radius:50%; font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.15s; }
+.cloth:hover .x { opacity:1; }
+.empty { grid-column:1/-1; padding:24px; text-align:center; color:var(--text2); font-size:12px; border:2px dashed var(--border); border-radius:10px; }
+
+.w-foot { padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:8px; }
+.w-foot button { flex:1; padding:12px; border:none; background:var(--accent); color:#fff; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; transition:opacity 0.15s; }
+.w-foot button:hover { opacity:0.9; }
+.w-foot .hint { font-size:11px; color:var(--text2); text-align:center; margin-top:6px; }
+
+/* 右侧人物 75% */
+.view { flex:1; position:relative; background:radial-gradient(ellipse at center,#f3f0eb 0%,#e5e1d9 100%); cursor:ew-resize; display:flex; align-items:center; justify-content:center; }
+.view canvas { display:block; }
+.tip { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:12px; color:var(--text2); pointer-events:none; animation:tipFade 4s forwards; display:flex; align-items:center; gap:6px; }
+.tip span { font-size:18px; }
+@keyframes tipFade { 0%,60%{opacity:0.7} 100%{opacity:0} }
+
 /* 裁剪弹窗 */
 .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:100; backdrop-filter:blur(4px); }
-.overlay.hidden { display:none; }
-.modal { background:var(--surface); border-radius:var(--radius); padding:20px; width:92%; max-width:460px; max-height:92vh; display:flex; flex-direction:column; gap:12px; box-shadow:0 8px 40px rgba(0,0,0,0.15); }
-.modal h3 { font-size:15px; display:flex; justify-content:space-between; align-items:center; }
-.modal h3 button { width:26px; height:26px; border:none; background:#f0efed; border-radius:50%; cursor:pointer; font-size:14px; }
-.crop-box { width:100%; aspect-ratio:1; background:#e8e5e0; border-radius:10px; overflow:hidden; touch-action:none; position:relative; }
-.crop-box canvas { width:100%; height:100%; }
-.crop-ctrls { display:flex; gap:6px; flex-wrap:wrap; }
-.crop-ctrls button { padding:8px 14px; border:1px solid var(--border); background:var(--surface); border-radius:20px; font-size:12px; cursor:pointer; }
-.modal-btns { display:flex; gap:8px; justify-content:flex-end; }
-.btn-c { padding:10px 20px; border:1px solid var(--border); background:var(--surface); border-radius:20px; font-size:13px; cursor:pointer; }
-.btn-s { padding:10px 24px; border:none; background:var(--accent); color:#fff; border-radius:20px; font-size:13px; font-weight:600; cursor:pointer; }
-.crop-tip { font-size:11px; color:var(--text2); text-align:center; }
-/* 手机适配 */
+.overlay.hide { display:none; }
+.modal { background:var(--surface); border-radius:18px; padding:24px; width:92%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; gap:14px; box-shadow:0 12px 60px rgba(0,0,0,0.18); }
+.m-head { display:flex; justify-content:space-between; align-items:center; font-size:16px; font-weight:600; }
+.m-head button { width:28px; height:28px; border:none; background:#f0eeeb; border-radius:50%; cursor:pointer; font-size:15px; }
+.crop-wrap { width:100%; aspect-ratio:1; background:#e8e5df; border-radius:12px; overflow:hidden; touch-action:none; }
+.crop-wrap canvas { width:100%; height:100%; }
+.crop-btns { display:flex; gap:8px; flex-wrap:wrap; }
+.crop-btns button { padding:9px 16px; border:1px solid var(--border); background:var(--surface); border-radius:20px; font-size:13px; cursor:pointer; transition:background 0.15s; }
+.crop-btns button:hover { background:#f5f3f0; }
+.m-foot { display:flex; gap:10px; justify-content:flex-end; }
+.btn2 { padding:11px 22px; border:1px solid var(--border); background:var(--surface); border-radius:22px; font-size:14px; cursor:pointer; }
+.btn1 { padding:11px 26px; border:none; background:var(--accent); color:#fff; border-radius:22px; font-size:14px; font-weight:600; cursor:pointer; }
+.tip2 { font-size:11px; color:var(--text2); text-align:center; }
+
 @media (max-width:768px) {
   .main { flex-direction:column; }
-  .wardrobe { width:100%; min-width:unset; max-height:38vh; border-right:none; border-bottom:1px solid var(--border); }
-  .cloth-card { width:72px; min-width:72px; height:72px; }
-  .wardrobe-body { flex-wrap:nowrap; overflow-x:auto; overflow-y:hidden; flex:none; padding-bottom:8px; }
-  .empty-hint { min-width:120px; }
-  .viewport { flex:1; min-height:45vh; }
+  .wardrobe { width:100%; min-width:unset; max-width:unset; max-height:36vh; border-right:none; border-bottom:1px solid var(--border); }
+  .w-body { grid-template-columns:repeat(auto-fill,minmax(76px,1fr)); gap:8px; }
+  .view { flex:1; }
 }
 </style>
 </head>
 <body>
 
-<!-- 顶栏 -->
 <div class="topbar">
   <h1>🪞 FitMirror</h1>
-  <span class="sub">虚拟试穿</span>
+  <span>虚拟试穿</span>
+  <span class="gh">← 左右滑动查看</span>
 </div>
 
-<!-- 主体 -->
 <div class="main">
 
-  <!-- 左侧衣柜 -->
-  <div class="wardrobe" id="wardrobe">
-
-    <div class="wardrobe-head">
-      <div class="cat-tabs" id="catTabs">
-        <button class="cat-tab active" data-cat="hat">🎩 帽子</button>
-        <button class="cat-tab" data-cat="top">👕 上衣</button>
-        <button class="cat-tab" data-cat="bottom">👖 裤子</button>
-        <button class="cat-tab" data-cat="shoes">👟 鞋子</button>
-      </div>
+  <!-- 左侧衣柜 25% -->
+  <div class="wardrobe">
+    <div class="w-head">
+      <div class="cats" id="cats"></div>
     </div>
-
-    <div class="wardrobe-body" id="wardrobeBody"></div>
-
-    <div class="add-row">
-      <button id="addBtn" style="flex:1">+ 添加衣服</button>
+    <div class="w-body" id="wBody"></div>
+    <div class="w-foot">
+      <button id="addBtn">+ 上传衣服</button>
     </div>
-
   </div>
 
-  <!-- 右侧3D人物 -->
-  <div class="viewport" id="vport">
-    <div class="hint">↻ 拖拽旋转 · 滚轮缩放 · 右键平移</div>
+  <!-- 右侧 3D 人物 -->
+  <div class="view" id="view">
+    <div class="tip"><span>👆</span> 左右滑动旋转人物</div>
   </div>
 
 </div>
 
 <!-- 裁剪弹窗 -->
-<div class="overlay hidden" id="cropOverlay">
+<div class="overlay hide" id="cropOverlay">
   <div class="modal">
-    <h3>裁剪 — <span id="cropCatLabel"></span><button id="cropClose">✕</button></h3>
-    <div class="crop-box" id="cropBox">
-      <canvas id="cropCvs"></canvas>
-    </div>
-    <div class="crop-ctrls">
+    <div class="m-head"><span>裁剪 — <span id="cropLabel"></span></span><button id="cropClose">✕</button></div>
+    <div class="crop-wrap"><canvas id="cropCvs"></canvas></div>
+    <div class="crop-btns">
       <button id="rotL">↺ 左转</button>
       <button id="rotR">↻ 右转</button>
       <button id="rst">↩ 重置</button>
     </div>
-    <div class="modal-btns">
-      <button class="btn-c" id="cropCancel">取消</button>
-      <button class="btn-s" id="cropOk">确认 ✓</button>
+    <div class="m-foot">
+      <button class="btn2" id="cropCancel">取消</button>
+      <button class="btn1" id="cropOk">确认 ✓</button>
     </div>
-    <p class="crop-tip">拖拽移动裁剪框 · 四角缩放 · 对准衣服主体</p>
+    <p class="tip2">拖拽移动 · 四角缩放 · 对准衣服主体</p>
   </div>
 </div>
 
@@ -143,19 +142,20 @@ html,body { height:100%; overflow:hidden; font-family:-apple-system,BlinkMacSyst
 
 <script type="module">
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ============================================================
 // DOM
 // ============================================================
-const vport = document.getElementById('vport');
-const wardrobeBody = document.getElementById('wardrobeBody');
-const catTabs = document.getElementById('catTabs');
+const viewEl = document.getElementById('view');
+const catsEl = document.getElementById('cats');
+const wBody = document.getElementById('wBody');
 const addBtn = document.getElementById('addBtn');
 const cropOverlay = document.getElementById('cropOverlay');
 const cropCvs = document.getElementById('cropCvs');
 const cropCtx = cropCvs.getContext('2d');
-const cropCatLabel = document.getElementById('cropCatLabel');
+const cropLabel = document.getElementById('cropLabel');
+const CAT_NAMES = { hat:'帽子', top:'上衣', bottom:'裤子', shoes:'鞋子' };
+const CAT_ICONS = { hat:'🎩', top:'👕', bottom:'👖', shoes:'👟' };
 
 // ============================================================
 // 状态
@@ -163,588 +163,501 @@ const cropCatLabel = document.getElementById('cropCatLabel');
 let curCat = 'hat';
 const wardrobe = { hat:[], top:[], bottom:[], shoes:[] };
 const selected = { hat:null, top:null, bottom:null, shoes:null };
-
-// 裁剪状态
-let cropImg = null;
-let cropCat = null;
-let cropRot = 0;
-let cropScl = 1;
-let cropRect = { x:0, y:0, w:200, h:200 };
-let dragOn = false;
-let dragKind = null; // 'move'|'nw'|'ne'|'sw'|'se'
-let dragStart = { x:0, y:0 };
-let rectStart = { x:0, y:0, w:0, h:0 };
+let targetRotY = 0;  // 人物目标旋转角度
 
 // ============================================================
-// Three.js 初始化
+// Three.js 场景
 // ============================================================
 const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.1;
-vport.appendChild(renderer.domElement);
+renderer.toneMappingExposure = 1.15;
+viewEl.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-// 柔和的暖灰背景
-scene.background = new THREE.Color(0xede9e3);
-scene.fog = new THREE.Fog(0xede9e3, 2.5, 8);
+scene.background = new THREE.Color(0xf3f0eb);
+scene.fog = new THREE.Fog(0xf3f0eb, 2.5, 9);
 
-const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 20);
-camera.position.set(0, 0.95, 3.5);
+const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 20);
+camera.position.set(0, 0.95, 3.8);
 camera.lookAt(0, 0.95, 0);
 
 // 灯光
-scene.add(new THREE.AmbientLight(0xfff5ee, 2.0));
-
-const key = new THREE.DirectionalLight(0xffffff, 4);
-key.position.set(2, 3, 3);
-key.castShadow = true;
-key.shadow.mapSize.set(1024, 1024);
-key.shadow.bias = -0.0001;
-scene.add(key);
-
-const fill = new THREE.DirectionalLight(0xffeedd, 2);
-fill.position.set(-1.5, 0.5, -1);
+scene.add(new THREE.AmbientLight(0xfff6f0, 2.2));
+const sun = new THREE.DirectionalLight(0xffffff, 4.5);
+sun.position.set(2, 3.5, 3);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024, 1024);
+sun.shadow.bias = -0.0001;
+scene.add(sun);
+const fill = new THREE.DirectionalLight(0xffeedd, 2.2);
+fill.position.set(-1.5, 0.3, -1);
 scene.add(fill);
-
-const rim = new THREE.DirectionalLight(0xffffff, 2.5);
-rim.position.set(0, 1.8, -2.5);
+const rim = new THREE.DirectionalLight(0xffffff, 2.8);
+rim.position.set(0, 2, -2.5);
 scene.add(rim);
 
-// 地面阴影接收面
-const floorGeo = new THREE.CircleGeometry(1.8, 32);
-const floor = new THREE.Mesh(floorGeo, new THREE.MeshStandardMaterial({ color:0xe5e0d8, roughness:0.9 }));
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -1.08;
-floor.receiveShadow = true;
-scene.add(floor);
-
-// OrbitControls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0.95, 0);
-controls.enableDamping = true;
-controls.dampingFactor = 0.08;
-controls.minDistance = 1.2;
-controls.maxDistance = 5;
-controls.maxPolarAngle = Math.PI * 0.68;
-controls.minPolarAngle = 0.3;
-controls.update();
+// 地面
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(2, 32),
+  new THREE.MeshStandardMaterial({ color:0xe5e1d9, roughness:0.9 })
+);
+ground.rotation.x = -Math.PI/2;
+ground.position.y = -1.06;
+ground.receiveShadow = true;
+scene.add(ground);
 
 // ============================================================
-// 材质
-// ============================================================
-const mSkin = () => new THREE.MeshStandardMaterial({ color:0xf5d0c5, roughness:0.55 });
-const mSkinD = () => new THREE.MeshStandardMaterial({ color:0xe8bca8, roughness:0.55 });
-const mHair = new THREE.MeshStandardMaterial({ color:0x4a3728, roughness:0.65 });
-const mWhite = () => new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.1 });
-const mPupil = new THREE.MeshStandardMaterial({ color:0x1a1816, roughness:0.1 });
-const mMouth = new THREE.MeshStandardMaterial({ color:0xd4837a, roughness:0.3 });
-const mBlush = new THREE.MeshStandardMaterial({ color:0xf0b0a8, roughness:0.3, transparent:true, opacity:0.35 });
-const mTop = new THREE.MeshStandardMaterial({ color:0xf0ebe3, roughness:0.5 });
-const mBottom = new THREE.MeshStandardMaterial({ color:0x6880a8, roughness:0.5 });
-const mShoes = new THREE.MeshStandardMaterial({ color:0x3a3a3a, roughness:0.4 });
-
-// ============================================================
-// 构建人物
+// 人物建模（可爱风格，成人比例）
 // ============================================================
 const root = new THREE.Group();
-const swayG = new THREE.Group(); swayG.name='sway';
-const breathG = new THREE.Group(); breathG.name='breath';
+const sway = new THREE.Group();
+const body = new THREE.Group();
 scene.add(root);
-root.add(swayG);
-swayG.add(breathG);
+root.add(sway);
+sway.add(body);
 
-// ---- 躯干 ----
-const torsoGeo = new THREE.CylinderGeometry(0.20, 0.24, 0.55, 16);
-const torso = new THREE.Mesh(torsoGeo, mSkin());
+// 材质
+const sMat = () => new THREE.MeshStandardMaterial({ color:0xfdd9c8, roughness:0.5 }); // 暖白皮
+const sDk = () => new THREE.MeshStandardMaterial({ color:0xe8bca0, roughness:0.5 });
+const hairMat = new THREE.MeshStandardMaterial({ color:0x3d2b1f, roughness:0.6 });
+const eyeW = () => new THREE.MeshStandardMaterial({ color:0xffffff, roughness:0.05 });
+const pupilM = new THREE.MeshStandardMaterial({ color:0x1a1614, roughness:0.05 });
+const blushM = new THREE.MeshStandardMaterial({ color:0xf5bcb0, roughness:0.3, transparent:true, opacity:0.3 });
+const mouthM = new THREE.MeshStandardMaterial({ color:0xe8958a, roughness:0.25 });
+const defTop = new THREE.MeshStandardMaterial({ color:0xf5f0eb, roughness:0.45 });
+const defBot = new THREE.MeshStandardMaterial({ color:0x7b8fab, roughness:0.45 });
+const defShoe = new THREE.MeshStandardMaterial({ color:0x3d3d3d, roughness:0.35 });
+
+// --- 躯干 ---
+const torsoGeo = new THREE.CapsuleGeometry(0.19, 0.42, 8, 12);
+const torso = new THREE.Mesh(torsoGeo, sMat());
 torso.position.y = 1.18;
 torso.castShadow = true;
-breathG.add(torso);
+body.add(torso);
 
-// 上衣穿戴层
-const topGeo = new THREE.CylinderGeometry(0.215, 0.255, 0.58, 16, 1, true, 0, Math.PI * 1.3);
-const topMesh = new THREE.Mesh(topGeo, mTop);
-topMesh.name = 'cloth-top';
+// 上衣层
+const topGeo = new THREE.CylinderGeometry(0.21, 0.25, 0.65, 20, 1, true, 0, Math.PI*1.0);
+const topMesh = new THREE.Mesh(topGeo, defTop);
 topMesh.position.y = 1.18;
-breathG.add(topMesh);
+topMesh.name = 'top';
+body.add(topMesh);
 
-// ---- 腿 ----
-const legGeo = new THREE.CylinderGeometry(0.13, 0.135, 0.55, 12);
+// --- 腿 ---
 [-0.09, 0.09].forEach(sx => {
-  const leg = new THREE.Mesh(legGeo, mSkin());
-  leg.position.set(sx, 0.55, 0);
+  const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.13, 0.55, 12), sMat());
+  leg.position.set(sx, 0.56, 0);
   leg.castShadow = true;
-  breathG.add(leg);
+  body.add(leg);
+  // 裤层
+  const p = new THREE.Mesh(new THREE.CylinderGeometry(0.135, 0.145, 0.60, 12), defBot);
+  p.position.set(sx, 0.56, 0);
+  p.name = 'bot-'+sx;
+  body.add(p);
 });
 
-// 裤子穿戴层
+// --- 小腿 ---
 [-0.09, 0.09].forEach(sx => {
-  const pGeo = new THREE.CylinderGeometry(0.145, 0.15, 0.58, 12);
-  const p = new THREE.Mesh(pGeo, mBottom);
-  p.position.set(sx, 0.55, 0);
-  p.name = 'cloth-bottom-' + sx;
-  breathG.add(p);
+  const c = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.10, 0.35, 10), sMat());
+  c.position.set(sx, 0.15, 0);
+  c.castShadow = true;
+  body.add(c);
 });
 
-// ---- 小腿 ----
+// --- 鞋 ---
 [-0.09, 0.09].forEach(sx => {
-  const calfGeo = new THREE.CylinderGeometry(0.09, 0.11, 0.35, 12);
-  const calf = new THREE.Mesh(calfGeo, mSkin());
-  calf.position.set(sx, 0.15, 0);
-  calf.castShadow = true;
-  breathG.add(calf);
-});
-
-// ---- 鞋子----
-[-0.09, 0.09].forEach(sx => {
-  const sGeo = new THREE.BoxGeometry(0.11, 0.07, 0.20);
-  const shoe = new THREE.Mesh(sGeo, mShoes);
+  const shoe = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.07, 0.21), defShoe);
   shoe.position.set(sx, -0.06, 0.04);
-  shoe.name = 'cloth-shoes-' + sx;
-  breathG.add(shoe);
+  shoe.name = 'shoe-'+sx;
+  body.add(shoe);
 });
 
-// ---- 脖子 ----
-const neckGeo = new THREE.CylinderGeometry(0.065, 0.075, 0.09, 12);
-const neck = new THREE.Mesh(neckGeo, mSkin());
-neck.position.y = 1.50;
-neck.castShadow = true;
-breathG.add(neck);
+// --- 脖子 ---
+body.add(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.09, 10), sMat())).position.y = 1.50;
 
-// ---- 头 ----
+// --- 头 ---
 const headG = new THREE.Group();
-headG.position.y = 1.63;
-breathG.add(headG);
+headG.position.y = 1.65;
+body.add(headG);
 
-const headGeo = new THREE.SphereGeometry(0.20, 28, 28);
-headGeo.scale(1, 1.08, 0.95);
-const headMesh = new THREE.Mesh(headGeo, mSkin());
-headMesh.castShadow = true;
-headG.add(headMesh);
+const headGeo = new THREE.SphereGeometry(0.195, 32, 32);
+headGeo.scale(1, 1.06, 0.94);
+headG.add(new THREE.Mesh(headGeo, sMat())).castShadow = true;
 
 // 头发
-const hairGeo = new THREE.SphereGeometry(0.21, 28, 28, 0, Math.PI*2, 0, Math.PI*0.52);
-hairGeo.scale(1, 1.08, 0.95);
-const hairMesh = new THREE.Mesh(hairGeo, mHair);
-hairMesh.position.y = 0.02;
-headG.add(hairMesh);
+const hairGeo = new THREE.SphereGeometry(0.205, 32, 32, 0, Math.PI*2, 0, Math.PI*0.5);
+hairGeo.scale(1, 1.06, 0.94);
+const hair = new THREE.Mesh(hairGeo, hairMat);
+hair.position.y = 0.03;
+headG.add(hair);
 
-// 眼睛组
+// 刘海
+const bangsGeo = new THREE.SphereGeometry(0.21, 24, 24, 0, Math.PI*2, 0, Math.PI*0.25);
+bangsGeo.scale(1, 1.06, 0.94);
+const bangs = new THREE.Mesh(bangsGeo, hairMat);
+bangs.position.set(0, 0.02, -0.08);
+bangs.rotation.x = -0.25;
+headG.add(bangs);
+
+// 眼睛
 const eyeG = new THREE.Group();
 headG.add(eyeG);
-[-0.07, 0.07].forEach(ex => {
-  const wGeo = new THREE.SphereGeometry(0.044, 12, 12);
-  wGeo.scale(1, 0.82, 0.38);
-  const w = new THREE.Mesh(wGeo, mWhite());
-  w.position.set(ex, 0.05, -0.17);
-  eyeG.add(w);
-  const pGeo = new THREE.SphereGeometry(0.024, 8, 8);
-  const p = new THREE.Mesh(pGeo, mPupil);
-  p.position.set(ex, 0.05, -0.205);
-  eyeG.add(p);
+[-0.072, 0.072].forEach(ex => {
+  // 眼白
+  const wGeo = new THREE.SphereGeometry(0.048, 16, 16);
+  wGeo.scale(1.05, 0.85, 0.35);
+  eyeG.add(new THREE.Mesh(wGeo, eyeW())).position.set(ex, 0.045, -0.168);
+  // 瞳孔
+  const pGeo = new THREE.SphereGeometry(0.027, 12, 12);
+  eyeG.add(new THREE.Mesh(pGeo, pupilM)).position.set(ex, 0.045, -0.205);
+  // 高光
+  const hlGeo = new THREE.SphereGeometry(0.012, 8, 8);
+  eyeG.add(new THREE.Mesh(hlGeo, eyeW())).position.set(ex+0.015, 0.058, -0.195);
 });
 
 // 眉毛
-[-0.07, 0.07].forEach(ex => {
-  const bGeo = new THREE.BoxGeometry(0.06, 0.012, 0.014);
-  const b = new THREE.Mesh(bGeo, mHair.clone());
-  b.position.set(ex, 0.09, -0.17);
+[-0.072, 0.072].forEach(ex => {
+  const bGeo = new THREE.BoxGeometry(0.065, 0.013, 0.013);
+  const b = new THREE.Mesh(bGeo, hairMat.clone());
+  b.position.set(ex, 0.09, -0.165);
   eyeG.add(b);
 });
 
 // 鼻子
-const noseGeo = new THREE.SphereGeometry(0.017, 8, 8);
-const nose = new THREE.Mesh(noseGeo, mSkinD());
-nose.position.set(0, 0.0, -0.195);
-headG.add(nose);
+headG.add(new THREE.Mesh(new THREE.SphereGeometry(0.018, 10, 10), sDk())).position.set(0, -0.005, -0.192);
 
 // 嘴
-const mouthGeo = new THREE.TorusGeometry(0.028, 0.007, 6, 8, Math.PI);
-const mouth = new THREE.Mesh(mouthGeo, mMouth);
-mouth.position.set(0, -0.04, -0.192);
+const mouthGeo = new THREE.TorusGeometry(0.028, 0.007, 8, 10, Math.PI);
+const mouth = new THREE.Mesh(mouthGeo, mouthM);
+mouth.position.set(0, -0.048, -0.19);
 mouth.rotation.z = Math.PI;
 headG.add(mouth);
 
 // 腮红
-[-0.09, 0.09].forEach(ex => {
-  const bg = new THREE.CircleGeometry(0.025, 12);
-  const bm = new THREE.Mesh(bg, mBlush);
-  bm.position.set(ex, 0.0, -0.18);
-  headG.add(bm);
+[-0.095, 0.095].forEach(ex => {
+  headG.add(new THREE.Mesh(new THREE.CircleGeometry(0.028, 12), blushM)).position.set(ex, -0.01, -0.18);
 });
 
-// ---- 帽子穿戴层----
-const hatG = new THREE.Group();
-hatG.position.y = 0.23;
-headG.add(hatG);
-const hatGeo = new THREE.CylinderGeometry(0.17, 0.19, 0.12, 16);
-const hatMesh = new THREE.Mesh(hatGeo, new THREE.MeshStandardMaterial({ visible:false }));
+// --- 帽子位 ---
+const hatPos = new THREE.Group();
+hatPos.position.y = 0.24;
+headG.add(hatPos);
+const hatMesh = new THREE.Mesh(
+  new THREE.CylinderGeometry(0.16, 0.18, 0.13, 16),
+  new THREE.MeshStandardMaterial({ visible:false })
+);
 hatMesh.position.y = 0.02;
-hatG.add(hatMesh);
+hatPos.add(hatMesh);
 
-// ---- 手臂 ----
+// --- 手臂 ---
 [-1, 1].forEach(side => {
-  const sx = side * 0.28;
-  // 上臂
-  const uaGeo = new THREE.CylinderGeometry(0.058, 0.062, 0.33, 10);
-  const ua = new THREE.Mesh(uaGeo, mSkin());
-  ua.position.set(sx, 1.32, 0);
-  ua.castShadow = true;
-  breathG.add(ua);
-  // 前臂
-  const laGeo = new THREE.CylinderGeometry(0.052, 0.056, 0.30, 10);
-  const la = new THREE.Mesh(laGeo, mSkin());
-  la.position.set(sx, 0.97, 0);
-  la.castShadow = true;
-  breathG.add(la);
-  // 手
-  const hGeo = new THREE.SphereGeometry(0.052, 10, 10);
-  hGeo.scale(1, 0.7, 0.48);
-  const h = new THREE.Mesh(hGeo, mSkin());
-  h.position.set(sx, 0.65, 0.02);
-  h.castShadow = true;
-  breathG.add(h);
+  const sx = side * 0.29;
+  body.add(new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.06, 0.32, 10), sMat())).position.set(sx, 1.32, 0);
+  body.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.053, 0.30, 10), sMat())).position.set(sx, 0.97, 0);
+  const hGeo = new THREE.SphereGeometry(0.05, 10, 10);
+  hGeo.scale(1, 0.68, 0.45);
+  body.add(new THREE.Mesh(hGeo, sMat())).position.set(sx, 0.65, 0.02);
 });
 
 // ============================================================
-// 衣服应用
+// 衣服贴图
 // ============================================================
 function applyCloth(cat, dataUrl) {
   const tex = new THREE.TextureLoader().load(dataUrl);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.wrapS = THREE.ClampToEdgeWrapping;
-  tex.wrapT = THREE.ClampToEdgeWrapping;
-
+  tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
   const mat = new THREE.MeshStandardMaterial({ map:tex, roughness:0.5, side:THREE.DoubleSide });
-  if (cat === 'hat') {
-    hatMesh.material = mat; hatMesh.material.visible = true;
-  } else if (cat === 'top') {
-    topMesh.material = mat;
-  } else if (cat === 'bottom') {
-    breathG.children.forEach(c => { if (c.name && c.name.startsWith('cloth-bottom-')) c.material = mat; });
-  } else if (cat === 'shoes') {
-    breathG.children.forEach(c => { if (c.name && c.name.startsWith('cloth-shoes-')) c.material = mat; });
-  }
+  if (cat==='hat') { hatMesh.material=mat; hatMesh.material.visible=true; }
+  else if (cat==='top') { topMesh.material=mat; }
+  else if (cat==='bottom') { body.children.forEach(c=>{ if(c.name&&c.name.startsWith('bot-')) c.material=mat; }); }
+  else if (cat==='shoes') { body.children.forEach(c=>{ if(c.name&&c.name.startsWith('shoe-')) c.material=mat; }); }
 }
-
 function removeCloth(cat) {
-  if (cat === 'hat') {
-    hatMesh.material = new THREE.MeshStandardMaterial({ visible:false });
-  } else if (cat === 'top') {
-    topMesh.material = mTop;
-  } else if (cat === 'bottom') {
-    breathG.children.forEach(c => { if (c.name && c.name.startsWith('cloth-bottom-')) c.material = mBottom; });
-  } else if (cat === 'shoes') {
-    breathG.children.forEach(c => { if (c.name && c.name.startsWith('cloth-shoes-')) c.material = mShoes; });
-  }
+  if (cat==='hat') { hatMesh.material=new THREE.MeshStandardMaterial({visible:false}); }
+  else if (cat==='top') { topMesh.material=defTop; }
+  else if (cat==='bottom') { body.children.forEach(c=>{ if(c.name&&c.name.startsWith('bot-')) c.material=defBot; }); }
+  else if (cat==='shoes') { body.children.forEach(c=>{ if(c.name&&c.name.startsWith('shoe-')) c.material=defShoe; }); }
 }
 
 // ============================================================
-// 待机动画
+// 动画循环
 // ============================================================
 const clock = new THREE.Clock();
-let breathP = 0, swayP = 0;
-let blinkTimer = 0, blinkOn = false, blinkDur = 0;
-let htTimer = 0, htOn = false, htPhase = 0;
+let breathP=0, swayP=0, blinkT=0, blinkOn=false, blinkD=0, htT=0, htOn=false, htP=0;
 
-function animLoop() {
-  requestAnimationFrame(animLoop);
+function loop() {
+  requestAnimationFrame(loop);
   const dt = Math.min(clock.getDelta(), 0.1);
 
   // 呼吸
-  breathP += dt * 2.5;
-  const bs = 1 + Math.sin(breathP) * 0.014;
-  breathG.scale.set(bs, 1 + Math.sin(breathP) * 0.011, bs);
+  breathP += dt * 2.4;
+  const b = 1 + Math.sin(breathP)*0.014;
+  body.scale.set(b, 1+Math.sin(breathP)*0.012, b);
 
   // 微晃
-  swayP += dt * 1.2;
-  swayG.rotation.z = Math.sin(swayP) * 0.028;
-  swayG.rotation.x = Math.cos(swayP * 1.3) * 0.018;
+  swayP += dt * 1.15;
+  sway.rotation.z = Math.sin(swayP)*0.025;
+  sway.rotation.x = Math.cos(swayP*1.4)*0.016;
+
+  // 平滑旋转
+  root.rotation.y += (targetRotY - root.rotation.y) * 0.12;
 
   // 眨眼
-  if (!blinkOn) {
-    blinkTimer += dt;
-    if (blinkTimer > 2.5 + Math.random() * 4) { blinkOn = true; blinkTimer = 0; blinkDur = 0; }
-  } else {
-    blinkDur += dt;
-    const t = blinkDur / 0.14;
-    eyeG.scale.y = t < 0.5 ? Math.max(0.04, 1 - t*2) : Math.min(1, (t-0.5)*2);
-    if (t >= 1) { eyeG.scale.y = 1; blinkOn = false; }
-  }
+  if (!blinkOn) { blinkT+=dt; if(blinkT>2.5+Math.random()*5){blinkOn=true;blinkT=0;blinkD=0;} }
+  else { blinkD+=dt; const t=blinkD/0.13; eyeG.scale.y=t<0.5?Math.max(0.03,1-t*2):Math.min(1,(t-0.5)*2); if(t>=1){eyeG.scale.y=1;blinkOn=false;} }
 
-  // 摸头发
-  if (!htOn) {
-    htTimer += dt;
-    if (htTimer > 10 + Math.random() * 14) { htOn = true; htTimer = 0; htPhase = 0; }
-  } else {
-    htPhase += dt;
-    const t = htPhase / 1.8;
-    if (t < 0.25) headG.rotation.z = THREE.MathUtils.lerp(0, 0.14, t / 0.25);
-    else if (t < 0.6) headG.rotation.z = 0.14;
-    else headG.rotation.z = THREE.MathUtils.lerp(0.14, 0, (t - 0.6) / 0.4);
-    if (t >= 1) { headG.rotation.z = 0; htOn = false; }
-  }
+  // 摸头
+  if(!htOn){ htT+=dt; if(htT>12+Math.random()*12){htOn=true;htT=0;htP=0;} }
+  else { htP+=dt; const t=htP/1.6; if(t<0.3)headG.rotation.z=THREE.MathUtils.lerp(0,0.12,t/0.3); else if(t<0.65)headG.rotation.z=0.12; else headG.rotation.z=THREE.MathUtils.lerp(0.12,0,(t-0.65)/0.35); if(t>=1){headG.rotation.z=0;htOn=false;} }
 
-  controls.update();
   renderer.render(scene, camera);
 }
 
 // ============================================================
-// 窗口尺寸
+// 左右滑动旋转
+// ============================================================
+let dragOn=false, dragX0=0, rot0=0;
+const viewEl_dom = viewEl;
+
+viewEl_dom.addEventListener('pointerdown', e => {
+  dragOn = true;
+  dragX0 = e.clientX;
+  rot0 = targetRotY;
+  viewEl_dom.setPointerCapture(e.pointerId);
+});
+viewEl_dom.addEventListener('pointermove', e => {
+  if (!dragOn) return;
+  const dx = e.clientX - dragX0;
+  targetRotY = rot0 + dx * 0.008;
+});
+viewEl_dom.addEventListener('pointerup', () => { dragOn = false; });
+viewEl_dom.addEventListener('pointerleave', () => { dragOn = false; });
+
+// 触摸也支持
+viewEl_dom.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    dragOn = true;
+    dragX0 = e.touches[0].clientX;
+    rot0 = targetRotY;
+  }
+}, { passive: true });
+viewEl_dom.addEventListener('touchmove', e => {
+  if (!dragOn || e.touches.length !== 1) return;
+  targetRotY = rot0 + (e.touches[0].clientX - dragX0) * 0.008;
+}, { passive: true });
+viewEl_dom.addEventListener('touchend', () => { dragOn = false; });
+
+// ============================================================
+// 响应式
 // ============================================================
 function resize() {
-  const r = vport.getBoundingClientRect();
+  const r = viewEl_dom.getBoundingClientRect();
   renderer.setSize(r.width, r.height);
   camera.aspect = r.width / Math.max(r.height, 1);
   camera.updateProjectionMatrix();
 }
 window.addEventListener('resize', resize);
 resize();
-
-// 启动渲染
-animLoop();
+loop();
 
 // ============================================================
-// 衣柜渲染
+// 衣柜 UI
 // ============================================================
-const catLabel = { hat:'帽子', top:'上衣', bottom:'裤子', shoes:'鞋子' };
+function buildCats() {
+  catsEl.innerHTML = Object.entries(CAT_ICONS).map(([k,icon]) =>
+    `<button class="cat${k===curCat?' active':''}" data-cat="${k}"><em>${icon}</em><span class="txt">${CAT_NAMES[k]}</span></button>`
+  ).join('');
+}
+buildCats();
 
 function renderWardrobe() {
   const items = wardrobe[curCat];
-  wardrobeBody.innerHTML = '';
-  if (items.length === 0) {
-    wardrobeBody.innerHTML = `<div class="empty-hint">还没有${catLabel[curCat]}<br>点击下方按钮上传</div>`;
-    return;
+  if (items.length===0) {
+    wBody.innerHTML = `<div class="empty">还没有${CAT_NAMES[curCat]}<br>上传一张照片吧</div>`;
+  } else {
+    wBody.innerHTML = items.map((it,i) => `
+      <div class="cloth${selected[curCat]===i?' on':''}">
+        <img src="${it.dataUrl}" alt="">
+        <button class="x" data-i="${i}">✕</button>
+      </div>
+    `).join('');
+    // 事件
+    wBody.querySelectorAll('.cloth').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target.classList.contains('x')) return;
+        const i = parseInt(el.querySelector('.x').dataset.i);
+        if (selected[curCat]===i) { selected[curCat]=null; removeCloth(curCat); }
+        else { selected[curCat]=i; applyCloth(curCat, items[i].dataUrl); }
+        renderWardrobe();
+      });
+    });
+    wBody.querySelectorAll('.x').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const i = parseInt(btn.dataset.i);
+        if (selected[curCat]===i) { selected[curCat]=null; removeCloth(curCat); }
+        else if (selected[curCat]>i) selected[curCat]--;
+        items.splice(i,1);
+        renderWardrobe();
+      });
+    });
   }
-  items.forEach((it, i) => {
-    const d = document.createElement('div');
-    d.className = 'cloth-card' + (selected[curCat] === i ? ' sel' : '');
-    d.innerHTML = `<img src="${it.dataUrl}" alt=""><button class="del" data-i="${i}">✕</button>`;
-    d.addEventListener('click', e => {
-      if (e.target.classList.contains('del')) return;
-      if (selected[curCat] === i) { selected[curCat] = null; removeCloth(curCat); }
-      else { selected[curCat] = i; applyCloth(curCat, it.dataUrl); }
-      renderWardrobe();
-    });
-    d.querySelector('.del').addEventListener('click', e => {
-      e.stopPropagation();
-      if (selected[curCat] === i) { selected[curCat] = null; removeCloth(curCat); }
-      else if (selected[curCat] > i) selected[curCat]--;
-      items.splice(i, 1);
-      renderWardrobe();
-    });
-    wardrobeBody.appendChild(d);
-  });
 }
+renderWardrobe();
 
-// ============================================================
 // 分类切换
-// ============================================================
-catTabs.addEventListener('click', e => {
-  const b = e.target.closest('.cat-tab');
-  if (!b) return;
-  curCat = b.dataset.cat;
-  catTabs.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-  b.classList.add('active');
+catsEl.addEventListener('click', e => {
+  const btn = e.target.closest('.cat');
+  if (!btn) return;
+  curCat = btn.dataset.cat;
+  catsEl.querySelectorAll('.cat').forEach(b => b.classList.toggle('active', b.dataset.cat===curCat));
   renderWardrobe();
 });
 
-// ============================================================
-// 上传流程
-// ============================================================
+// 上传
 addBtn.addEventListener('click', () => {
   const inp = document.createElement('input');
-  inp.type = 'file';
-  inp.accept = 'image/*';
-  inp.onchange = () => {
-    const f = inp.files[0];
-    if (!f) return;
-    openCropper(f, curCat);
-  };
+  inp.type='file'; inp.accept='image/*';
+  inp.onchange = () => { if (inp.files[0]) openCropper(inp.files[0], curCat); };
   inp.click();
 });
 
 // ============================================================
 // 裁剪器
 // ============================================================
+let cImg=null, cCat=null, cRot=0, cScl=1;
+let cRect={x:0,y:0,w:200,h:200};
+let cDrag=false, cKind=null, cDs={x:0,y:0}, cRs={x:0,y:0,w:0,h:0};
+
 function openCropper(file, cat) {
-  cropCat = cat;
-  cropRot = 0;
-  cropCatLabel.textContent = catLabel[cat];
+  cCat=cat; cRot=0;
+  cropLabel.textContent = CAT_NAMES[cat];
   const url = URL.createObjectURL(file);
   const img = new Image();
   img.onload = () => {
-    cropImg = img;
-    const cw = img.width * 0.7, ch = img.height * 0.7;
-    cropRect = { x:(img.width-cw)/2, y:(img.height-ch)/2, w:cw, h:ch };
-    fitCropCanvas();
-    renderCrop();
-    cropOverlay.classList.remove('hidden');
+    cImg=img;
+    const cw=img.width*0.7, ch=img.height*0.7;
+    cRect={x:(img.width-cw)/2, y:(img.height-ch)/2, w:cw, h:ch};
+    fitCrop(); renderCrop();
+    cropOverlay.classList.remove('hide');
   };
-  img.src = url;
+  img.src=url;
 }
-
-function fitCropCanvas() {
-  if (!cropImg) return;
-  const max = 420;
-  cropScl = Math.min(max / cropImg.width, max / cropImg.height);
-  cropCvs.width = cropImg.width * cropScl;
-  cropCvs.height = cropImg.height * cropScl;
+function fitCrop() {
+  if(!cImg) return;
+  cScl = Math.min(440/cImg.width, 440/cImg.height);
+  cropCvs.width = cImg.width*cScl;
+  cropCvs.height = cImg.height*cScl;
 }
-
 function renderCrop() {
-  if (!cropImg) return;
-  const ctx = cropCtx, w = cropCvs.width, h = cropCvs.height;
-  ctx.clearRect(0, 0, w, h);
-  // 旋转
-  ctx.save();
-  ctx.translate(w/2, h/2);
-  const rad = (cropRot * Math.PI) / 180;
-  ctx.rotate(rad);
-  const s = cropScl;
-  ctx.drawImage(cropImg, -cropImg.width*s/2, -cropImg.height*s/2, cropImg.width*s, cropImg.height*s);
+  if(!cImg) return;
+  const ctx=cropCtx, w=cropCvs.width, h=cropCvs.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.save(); ctx.translate(w/2,h/2);
+  ctx.rotate(cRot*Math.PI/180);
+  ctx.drawImage(cImg, -cImg.width*cScl/2, -cImg.height*cScl/2, cImg.width*cScl, cImg.height*cScl);
   ctx.restore();
-  // 遮罩
-  ctx.fillStyle = 'rgba(0,0,0,0.4)';
-  ctx.fillRect(0, 0, w, h);
-  const cx = cropRect.x * cropScl, cy = cropRect.y * cropScl;
-  const cw = cropRect.w * cropScl, ch = cropRect.h * cropScl;
-  ctx.clearRect(cx, cy, cw, ch);
-  // 裁剪区内图像
-  ctx.save();
-  ctx.beginPath(); ctx.rect(cx, cy, cw, ch); ctx.clip();
-  ctx.translate(w/2, h/2);
-  ctx.rotate(rad);
-  ctx.drawImage(cropImg, -cropImg.width*s/2, -cropImg.height*s/2, cropImg.width*s, cropImg.height*s);
+  ctx.fillStyle='rgba(0,0,0,0.42)'; ctx.fillRect(0,0,w,h);
+  const cx=cRect.x*cScl, cy=cRect.y*cScl, cw=cRect.w*cScl, ch=cRect.h*cScl;
+  ctx.clearRect(cx,cy,cw,ch);
+  ctx.save(); ctx.beginPath(); ctx.rect(cx,cy,cw,ch); ctx.clip();
+  ctx.translate(w/2,h/2); ctx.rotate(cRot*Math.PI/180);
+  ctx.drawImage(cImg, -cImg.width*cScl/2, -cImg.height*cScl/2, cImg.width*cScl, cImg.height*cScl);
   ctx.restore();
-  // 框 + 网格
-  ctx.strokeStyle = '#ff6b6b'; ctx.lineWidth = 2;
-  ctx.strokeRect(cx, cy, cw, ch);
-  ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 0.5;
-  [[1/3,0],[2/3,0],[1/3,ch],[2/3,ch],[0,1/3],[cw,1/3],[0,2/3],[cw,2/3]].forEach(([px,py]) => {
-    if (px===1/3||px===2/3) { ctx.beginPath(); ctx.moveTo(cx+cw*px/cw,cx===1/3?cy:cy); ctx.lineTo(cx+cw*(px===1/3?1/3:2/3),cy+ch); ctx.stroke(); }
-  });
+  // 框
+  ctx.strokeStyle='#5b7fff'; ctx.lineWidth=2.5; ctx.strokeRect(cx,cy,cw,ch);
+  // 网格
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=0.5;
   ctx.beginPath();
-  ctx.moveTo(cx + cw/3, cy); ctx.lineTo(cx + cw/3, cy + ch);
-  ctx.moveTo(cx + cw*2/3, cy); ctx.lineTo(cx + cw*2/3, cy + ch);
-  ctx.moveTo(cx, cy + ch/3); ctx.lineTo(cx + cw, cy + ch/3);
-  ctx.moveTo(cx, cy + ch*2/3); ctx.lineTo(cx + cw, cy + ch*2/3);
+  ctx.moveTo(cx+cw/3,cy); ctx.lineTo(cx+cw/3,cy+ch);
+  ctx.moveTo(cx+cw*2/3,cy); ctx.lineTo(cx+cw*2/3,cy+ch);
+  ctx.moveTo(cx,cy+ch/3); ctx.lineTo(cx+cw,cy+ch/3);
+  ctx.moveTo(cx,cy+ch*2/3); ctx.lineTo(cx+cw,cy+ch*2/3);
   ctx.stroke();
-  // 四角手柄
-  const hs = 14;
-  [[cx,cy],[cx+cw,cy],[cx,cy+ch],[cx+cw,cy+ch]].forEach(([hx,hy]) => {
-    ctx.fillStyle = '#ff6b6b';
-    ctx.fillRect(hx-hs/2, hy-hs/2, hs, hs);
-    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
-    ctx.strokeRect(hx-hs/2, hy-hs/2, hs, hs);
+  // 四角
+  const hs=16;
+  [[cx,cy],[cx+cw,cy],[cx,cy+ch],[cx+cw,cy+ch]].forEach(([hx,hy])=>{
+    ctx.fillStyle='#5b7fff'; ctx.fillRect(hx-hs/2,hy-hs/2,hs,hs);
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2; ctx.strokeRect(hx-hs/2,hy-hs/2,hs,hs);
   });
 }
-
-// 裁剪交互
-function getCropPos(e) {
-  const r = cropCvs.getBoundingClientRect();
-  const cx = e.touches ? e.touches[0].clientX : e.clientX;
-  const cy = e.touches ? e.touches[0].clientY : e.clientY;
-  return { x:(cx-r.left)*(cropCvs.width/r.width), y:(cy-r.top)*(cropCvs.height/r.height) };
+function cpPos(e) {
+  const r=cropCvs.getBoundingClientRect();
+  const x=e.touches?e.touches[0].clientX:e.clientX;
+  const y=e.touches?e.touches[0].clientY:e.clientY;
+  return {x:(x-r.left)*(cropCvs.width/r.width), y:(y-r.top)*(cropCvs.height/r.height)};
 }
+cropCvs.addEventListener('mousedown',e=>startCrop(cpPos(e)));
+cropCvs.addEventListener('touchstart',e=>{e.preventDefault();startCrop(cpPos(e));},{passive:false});
+window.addEventListener('mousemove',e=>moveCrop(cpPos(e)));
+window.addEventListener('touchmove',e=>{if(cDrag){e.preventDefault();moveCrop(cpPos(e));}},{passive:false});
+window.addEventListener('mouseup',endCrop);
+window.addEventListener('touchend',endCrop);
 
-cropCvs.addEventListener('mousedown', e => startCropDrag(getCropPos(e)));
-cropCvs.addEventListener('touchstart', e => { e.preventDefault(); startCropDrag(getCropPos(e)); }, {passive:false});
-window.addEventListener('mousemove', e => doCropDrag(getCropPos(e)));
-window.addEventListener('touchmove', e => { if(dragOn){ e.preventDefault(); doCropDrag(getCropPos(e)); } }, {passive:false});
-window.addEventListener('mouseup', endCropDrag);
-window.addEventListener('touchend', endCropDrag);
-
-function startCropDrag(pos) {
-  const cx = cropRect.x * cropScl, cy = cropRect.y * cropScl;
-  const cw = cropRect.w * cropScl, ch = cropRect.h * cropScl;
-  const hs = 20;
-  const corners = { nw:[cx,cy], ne:[cx+cw,cy], sw:[cx,cy+ch], se:[cx+cw,cy+ch] };
-  for (const [k,[hx,hy]] of Object.entries(corners)) {
-    if (Math.abs(pos.x-hx)<hs && Math.abs(pos.y-hy)<hs) { dragKind=k; break; }
-  }
-  if (!dragKind) {
-    if (pos.x>=cx && pos.x<=cx+cw && pos.y>=cy && pos.y<=cy+ch) dragKind='move';
-    else return;
-  }
-  dragOn = true;
-  dragStart = { x:pos.x, y:pos.y };
-  rectStart = { ...cropRect };
+function startCrop(pos) {
+  const cx=cRect.x*cScl, cy=cRect.y*cScl, cw=cRect.w*cScl, ch=cRect.h*cScl, hs=22;
+  const corners={nw:[cx,cy],ne:[cx+cw,cy],sw:[cx,cy+ch],se:[cx+cw,cy+ch]};
+  for(const [k,[hx,hy]] of Object.entries(corners)){if(Math.abs(pos.x-hx)<hs&&Math.abs(pos.y-hy)<hs){cKind=k;break;}}
+  if(!cKind){if(pos.x>=cx&&pos.x<=cx+cw&&pos.y>=cy&&pos.y<=cy+ch)cKind='move';else return;}
+  cDrag=true; cDs={x:pos.x,y:pos.y}; cRs={...cRect};
 }
-
-function doCropDrag(pos) {
-  if (!dragOn) return;
-  const dx = (pos.x - dragStart.x) / cropScl;
-  const dy = (pos.y - dragStart.y) / cropScl;
-  const rs = rectStart;
-  let { x, y, w, h } = rs;
-  if (dragKind === 'move') { x=rs.x+dx; y=rs.y+dy; }
-  else if (dragKind === 'se') { w=rs.w+dx; h=rs.h+dy; }
-  else if (dragKind === 'sw') { x=rs.x+dx; w=rs.w-dx; h=rs.h+dy; }
-  else if (dragKind === 'ne') { y=rs.y+dy; w=rs.w+dx; h=rs.h-dy; }
-  else if (dragKind === 'nw') { x=rs.x+dx; y=rs.y+dy; w=rs.w-dx; h=rs.h-dy; }
-  if (w<40) w=40; if (h<40) h=40;
-  if (x<0) x=0; if (y<0) y=0;
-  if (x+w>cropImg.width) w=cropImg.width-x;
-  if (y+h>cropImg.height) h=cropImg.height-y;
-  cropRect = { x,y,w,h };
-  renderCrop();
+function moveCrop(pos) {
+  if(!cDrag) return;
+  const dx=(pos.x-cDs.x)/cScl, dy=(pos.y-cDs.y)/cScl, rs=cRs;
+  let {x,y,w,h}=rs;
+  if(cKind==='move'){x=rs.x+dx;y=rs.y+dy;}
+  else if(cKind==='se'){w=rs.w+dx;h=rs.h+dy;}
+  else if(cKind==='sw'){x=rs.x+dx;w=rs.w-dx;h=rs.h+dy;}
+  else if(cKind==='ne'){y=rs.y+dy;w=rs.w+dx;h=rs.h-dy;}
+  else if(cKind==='nw'){x=rs.x+dx;y=rs.y+dy;w=rs.w-dx;h=rs.h-dy;}
+  if(w<35)w=35; if(h<35)h=35;
+  if(x<0)x=0; if(y<0)y=0;
+  if(x+w>cImg.width)w=cImg.width-x;
+  if(y+h>cImg.height)h=cImg.height-y;
+  cRect={x,y,w,h}; renderCrop();
 }
+function endCrop(){cDrag=false;cKind=null;}
 
-function endCropDrag() { dragOn=false; dragKind=null; }
+document.getElementById('rotL').onclick=()=>{cRot=(cRot-15)%360;renderCrop();};
+document.getElementById('rotR').onclick=()=>{cRot=(cRot+15)%360;renderCrop();};
+document.getElementById('rst').onclick=()=>{
+  if(!cImg)return;
+  const cw=cImg.width*0.7,ch=cImg.height*0.7;
+  cRect={x:(cImg.width-cw)/2,y:(cImg.height-ch)/2,w:cw,h:ch};cRot=0;renderCrop();
+};
 
-document.getElementById('rotL').addEventListener('click', ()=>{ cropRot=(cropRot-15)%360; renderCrop(); });
-document.getElementById('rotR').addEventListener('click', ()=>{ cropRot=(cropRot+15)%360; renderCrop(); });
-document.getElementById('rst').addEventListener('click', ()=>{
-  if (!cropImg) return;
-  const cw=cropImg.width*0.7, ch=cropImg.height*0.7;
-  cropRect={ x:(cropImg.width-cw)/2, y:(cropImg.height-ch)/2, w:cw, h:ch };
-  cropRot=0; renderCrop();
-});
-
-// 确认裁剪
-document.getElementById('cropOk').addEventListener('click', ()=>{
-  if (!cropImg) return;
-  const off = document.createElement('canvas');
-  off.width = cropRect.w; off.height = cropRect.h;
-  const ctx = off.getContext('2d');
-  ctx.save();
-  ctx.translate(off.width/2, off.height/2);
-  if (cropRot !== 0) ctx.rotate((cropRot*Math.PI)/180);
-  ctx.drawImage(cropImg, cropRect.x, cropRect.y, cropRect.w, cropRect.h, -off.width/2, -off.height/2, off.width, off.height);
+document.getElementById('cropOk').onclick=()=>{
+  if(!cImg)return;
+  const off=document.createElement('canvas');
+  off.width=cRect.w; off.height=cRect.h;
+  const ctx=off.getContext('2d');
+  ctx.save(); ctx.translate(off.width/2,off.height/2);
+  if(cRot!==0)ctx.rotate(cRot*Math.PI/180);
+  ctx.drawImage(cImg,cRect.x,cRect.y,cRect.w,cRect.h,-off.width/2,-off.height/2,off.width,off.height);
   ctx.restore();
-  const dataUrl = off.toDataURL('image/png', 0.85);
+  const dataUrl=off.toDataURL('image/png',0.85);
   closeCropper();
-  // 添加到衣柜并应用
-  wardrobe[cropCat].push({ dataUrl });
-  curCat = cropCat;
-  catTabs.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat === curCat));
-  const idx = wardrobe[cropCat].length - 1;
-  selected[cropCat] = idx;
-  applyCloth(cropCat, dataUrl);
+  wardrobe[cCat].push({dataUrl});
+  curCat=cCat;
+  catsEl.querySelectorAll('.cat').forEach(b=>b.classList.toggle('active',b.dataset.cat===curCat));
+  selected[cCat]=wardrobe[cCat].length-1;
+  applyCloth(cCat,dataUrl);
   renderWardrobe();
+};
+function closeCropper(){cropOverlay.classList.add('hide');cImg=null;}
+document.getElementById('cropClose').onclick=closeCropper;
+document.getElementById('cropCancel').onclick=closeCropper;
+cropOverlay.addEventListener('click',e=>{if(e.target===cropOverlay)closeCropper();});
+
+// 键盘
+window.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT')return;
+  const m={'1':'hat','2':'top','3':'bottom','4':'shoes'};
+  if(m[e.key]){curCat=m[e.key];catsEl.querySelectorAll('.cat').forEach(b=>b.classList.toggle('active',b.dataset.cat===curCat));renderWardrobe();}
 });
 
-function closeCropper() { cropOverlay.classList.add('hidden'); cropImg=null; }
-document.getElementById('cropClose').addEventListener('click', closeCropper);
-document.getElementById('cropCancel').addEventListener('click', closeCropper);
-cropOverlay.addEventListener('click', e => { if (e.target === cropOverlay) closeCropper(); });
-
-// ============================================================
-// 键盘切换
-// ============================================================
-window.addEventListener('keydown', e => {
-  if (e.target.tagName==='INPUT') return;
-  const map = {'1':'hat','2':'top','3':'bottom','4':'shoes'};
-  if (map[e.key]) { curCat=map[e.key]; catTabs.querySelectorAll('.cat-tab').forEach(t => t.classList.toggle('active', t.dataset.cat===curCat)); renderWardrobe(); }
-});
-
-// ============================================================
-// 初始渲染
-// ============================================================
-renderWardrobe();
-console.log('🪞 FitMirror ready — 3D virtual try-on');
+console.log('🪞 FitMirror v2 ready');
 </script>
 </body>
 </html>
