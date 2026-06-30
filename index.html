@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>FitMirror - 虚拟试穿</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部栏 -->
+<header class="top-bar">
+  <h1>🪞 FitMirror</h1>
+  <span class="subtitle">虚拟穿搭</span>
+</header>
+
+<!-- 主区域 -->
+<main class="app-container">
+
+  <!-- 左侧：衣柜面板 -->
+  <aside class="wardrobe-panel" id="wardrobePanel">
+    <div class="category-tabs" id="categoryTabs">
+      <button class="cat-btn active" data-cat="hat">🎩 帽子</button>
+      <button class="cat-btn" data-cat="top">👕 上衣</button>
+      <button class="cat-btn" data-cat="bottom">👖 裤子</button>
+      <button class="cat-btn" data-cat="shoes">👟 鞋子</button>
+    </div>
+
+    <div class="clothes-grid" id="clothesGrid">
+      <!-- 动态填充 -->
+    </div>
+
+    <button class="add-btn" id="addClothBtn">
+      + 添加衣服
+    </button>
+
+    <!-- 移动端折叠按钮 -->
+    <button class="toggle-wardrobe-btn" id="toggleWardrobeBtn">
+      <span class="arrow">▼</span> 衣柜
+    </button>
+  </aside>
+
+  <!-- 右侧：3D人物 -->
+  <section class="viewport" id="viewport">
+    <canvas id="threeCanvas"></canvas>
+    <div class="hint-rotate">↻ 拖拽旋转查看</div>
+  </section>
+
+</main>
+
+<!-- 上传/裁剪弹窗 -->
+<div class="modal-overlay" id="cropModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>裁剪衣服</h3>
+      <button class="close-btn" id="closeCropModal">✕</button>
+    </div>
+
+    <div class="crop-area">
+      <canvas id="cropCanvas"></canvas>
+    </div>
+
+    <div class="crop-controls">
+      <button class="ctrl-btn" id="rotateLeftBtn">↺ 左转</button>
+      <button class="ctrl-btn" id="rotateRightBtn">↻ 右转</button>
+      <button class="ctrl-btn" id="resetCropBtn">↩ 重置</button>
+      <label class="upload-label">
+        📷 重新选择
+        <input type="file" id="cropFileInput" accept="image/*" hidden>
+      </label>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancelCropBtn">取消</button>
+      <button class="btn-confirm" id="confirmCropBtn">确认 ✓</button>
+    </div>
+
+    <p class="crop-hint">拖拽移动裁剪框，拖动边角调整大小。尽量让衣服占满裁剪框。</p>
+  </div>
+</div>
+
+<!-- 分类选择弹窗（裁剪前选择放到哪个分类） -->
+<div class="modal-overlay" id="categoryModal">
+  <div class="modal-content small-modal">
+    <h3>这件衣服属于？</h3>
+    <div class="cat-select-grid">
+      <button class="cat-select-btn" data-cat="hat">🎩 帽子</button>
+      <button class="cat-select-btn" data-cat="top">👕 上衣</button>
+      <button class="cat-select-btn" data-cat="bottom">👖 裤子</button>
+      <button class="cat-select-btn" data-cat="shoes">👟 鞋子</button>
+    </div>
+    <button class="btn-cancel" id="cancelCategoryBtn">取消</button>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

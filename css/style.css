@@ -1,0 +1,399 @@
+/* ============================================
+   FitMirror — 虚拟试穿
+   Mobile-first, clean aesthetic
+   ============================================ */
+
+:root {
+  --bg: #faf9f7;
+  --surface: #ffffff;
+  --border: #e8e5e0;
+  --text: #2d2a26;
+  --text-secondary: #8c8780;
+  --accent: #ff6b6b;
+  --accent-hover: #ee5a5a;
+  --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ---- Top Bar ---- */
+.top-bar {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+}
+.top-bar h1 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+.top-bar .subtitle {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---- App Container ---- */
+.app-container {
+  display: flex;
+  height: calc(100% - 48px);
+  position: relative;
+}
+
+/* ---- Wardrobe Panel ---- */
+.wardrobe-panel {
+  width: 280px;
+  min-width: 280px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 12px;
+  z-index: 5;
+  transition: transform 0.3s ease;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.cat-btn {
+  flex: 1;
+  min-width: 55px;
+  padding: 8px 4px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  color: var(--text-secondary);
+}
+.cat-btn.active {
+  background: var(--text);
+  color: white;
+  border-color: var(--text);
+}
+.cat-btn:hover:not(.active) {
+  background: #f3f2f0;
+}
+
+.clothes-grid {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-y: auto;
+  align-content: flex-start;
+  padding-right: 4px;
+}
+.clothes-grid::-webkit-scrollbar { width: 4px; }
+.clothes-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.cloth-item {
+  width: calc(50% - 4px);
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  background: #f5f3f0;
+  transition: border-color 0.15s, transform 0.1s;
+}
+.cloth-item:hover { transform: scale(1.03); }
+.cloth-item.selected { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(255,107,107,0.25); }
+.cloth-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.cloth-item .delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.cloth-item:hover .delete-btn { opacity: 1; }
+
+.cloth-empty {
+  width: calc(50% - 4px);
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 12px;
+  text-align: center;
+  padding: 8px;
+}
+
+.add-btn {
+  padding: 10px;
+  border: 2px dashed var(--border);
+  background: transparent;
+  border-radius: var(--radius);
+  font-size: 14px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+  width: 100%;
+}
+.add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+.toggle-wardrobe-btn {
+  display: none;
+  padding: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+/* ---- Viewport ---- */
+.viewport {
+  flex: 1;
+  position: relative;
+  cursor: grab;
+  background: radial-gradient(ellipse at center, #f5f3f0 0%, #e8e4dd 100%);
+}
+.viewport:active { cursor: grabbing; }
+.viewport canvas { display: block; }
+
+.hint-rotate {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: var(--text-secondary);
+  pointer-events: none;
+  opacity: 0.7;
+  animation: fadeHint 4s forwards;
+}
+@keyframes fadeHint {
+  0%, 60% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+/* ---- Modal ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(4px);
+}
+.modal-overlay.hidden { display: none; }
+
+.modal-content {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--shadow);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-header h3 { font-size: 16px; }
+
+.close-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f0efed;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.crop-area {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #f0efed;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  touch-action: none;
+}
+.crop-area canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.crop-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ctrl-btn, .upload-label {
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ctrl-btn:hover, .upload-label:hover {
+  background: #f3f2f0;
+}
+.upload-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.modal-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn-cancel {
+  padding: 10px 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.btn-confirm {
+  padding: 10px 24px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-confirm:hover { background: var(--accent-hover); }
+
+.crop-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* Small modal */
+.small-modal {
+  max-width: 360px;
+  text-align: center;
+}
+.cat-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.cat-select-btn {
+  padding: 14px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.cat-select-btn:hover {
+  border-color: var(--accent);
+  background: #fff5f5;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 768px) {
+  .app-container { flex-direction: column; }
+
+  .wardrobe-panel {
+    width: 100%;
+    min-width: unset;
+    height: auto;
+    max-height: 35vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow-y: auto;
+  }
+
+  .clothes-grid {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex: none;
+    padding-bottom: 4px;
+  }
+  .cloth-item {
+    width: 80px;
+    min-width: 80px;
+    height: 80px;
+  }
+  .cloth-empty {
+    min-width: 80px;
+    height: 80px;
+  }
+
+  .toggle-wardrobe-btn {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .wardrobe-panel.collapsed .category-tabs,
+  .wardrobe-panel.collapsed .clothes-grid,
+  .wardrobe-panel.collapsed .add-btn {
+    display: none;
+  }
+  .wardrobe-panel.collapsed { max-height: 54px; }
+
+  .viewport { flex: 1; min-height: 50vh; }
+}
